@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Area Hasan — Dashboard 2025 vs 2026</title>
+<link rel="icon" type="image/jpeg" href="assets/icon.jpg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ===== HEADER ===== -->
+  <header class="banner">
+    <img class="banner-bg" src="assets/banner.jpg" alt="">
+    <div class="banner-content">
+      <div class="banner-top">
+        <span class="pill pill-live">LIVE DASHBOARD AREA HASAN</span>
+        <div class="banner-actions">
+          <button class="icon-btn" id="btnSheetConfig" title="Sheet Config & Sync" aria-label="Sinkron Google Sheets">
+            <svg viewBox="0 0 24 24"><path d="M6 19q-2.075 0-3.538-1.438T1 14.1q0-1.65 1-2.938t2.6-1.6q.5-1.65 1.888-2.906T8.75 5.5q.925 0 1.788.363T12.1 6.9q.375-.15.775-.225T13.75 6.6q1.65 0 2.788 1.088T17.75 10.3v.35q1.325.2 2.288 1.15T21 14.15q0 1.6-1.15 2.725T17 18h-2v-2h2q.825 0 1.413-.588T19 14.15q0-.825-.588-1.413T17 12.15h-1.25V10.3q0-.925-.575-1.613T13.75 8q-.5 0-.9.163t-.7.437l-1.3.9-1-1.15q-.475-.55-1.088-.85T7.75 7.1q-1.05 0-1.9.6t-1.15 1.6l-.35 1.05-1.075.2q-.925.175-1.55.875T1 13q0 1.25.875 2.125T4 16h2v2Z M11 10h2v3h3v2h-3v3h-2v-3H8v-2h3v-3Z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="banner-bottom">
+        <h1>AREA HASAN 2025 vs 2026</h1>
+        <p>AC HASAN BASRI • <span id="storeCountLabel">18</span> TOKO • REAL-TIME SHEETS</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="sync-progress" id="syncProgress"><div class="sync-progress-bar"></div></div>
+
+  <div class="sync-toast" id="syncToast" hidden>
+    <span id="syncToastText"></span>
+    <button id="syncToastClose" aria-label="Tutup">
+      <svg viewBox="0 0 24 24"><path d="M6.4 19 5 17.6 10.6 12 5 6.4 6.4 5 12 10.6 17.6 5 19 6.4 13.4 12 19 17.6 17.6 19 12 13.4Z"/></svg>
+    </button>
+  </div>
+
+  <!-- ===== TABS ===== -->
+  <nav class="tabbar" id="tabbar">
+    <button class="tab active" data-tab="0">📉 Sales 25 vs 26</button>
+    <button class="tab" data-tab="1">🧑‍🤝‍🧑 KPI Personil</button>
+    <button class="tab" data-tab="2">🎯 IKT Bauran</button>
+    <span class="tab-indicator" id="tabIndicator"></span>
+  </nav>
+
+  <!-- ===== CONTENT ===== -->
+  <main id="content">
+
+    <!-- ---------- TAB 0: SALES COMPARISON ---------- -->
+    <section class="tab-panel active" id="panel-0">
+
+      <div class="block">
+        <div class="row space-between center">
+          <h3 class="section-title">Filter Bulan (2025 vs 2026)</h3>
+          <span class="ytd-label">YTD View</span>
+        </div>
+        <div class="chip-row" id="monthFilterRow"></div>
+      </div>
+
+      <div class="block">
+        <h3 class="section-title">Filter Toko Area Hasan (<span class="storeCountLabel">18</span> Toko)</h3>
+        <div class="chip-row" id="storeFilterRowSales"></div>
+      </div>
+
+      <div class="card summary-card">
+        <div class="card-label">PERBANDINGAN TOTAL SALES &amp; QTY</div>
+        <div class="row space-between top" style="margin-top:12px;">
+          <div>
+            <div class="micro-label">Total Sales 2025</div>
+            <div class="value-lg" id="totalSales2025">Rp 0</div>
+            <div class="micro-label" id="totalQty2025">Qty: 0</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="micro-label">Total Sales 2026</div>
+            <div class="value-lg" id="totalSales2026">Rp 0</div>
+            <div class="micro-label" id="totalQty2026">Qty: 0</div>
+          </div>
+        </div>
+        <div class="delta-box" id="deltaBox">
+          <div class="row center">
+            <svg class="delta-arrow" id="deltaArrow" viewBox="0 0 24 24"><path d="M12 4l7 7h-4v9h-6v-9H5z"/></svg>
+            <span id="deltaText" class="delta-text">Selisih Sales Net: Rp 0</span>
+          </div>
+          <span class="pct-pill" id="pctPill">+0.0%</span>
+        </div>
+      </div>
+
+      <div class="card drop-highlight-card" id="topDropCard" hidden>
+        <div class="row center">
+          <div class="warn-circle">
+            <svg viewBox="0 0 24 24"><path fill="#fff" d="M1 21h22L12 2 1 21Zm12-3h-2v-2h2v2Zm0-4h-2v-4h2v4Z"/></svg>
+          </div>
+          <div style="margin-left:10px;">
+            <div class="micro-label rose">TOKO PENURUNAN TERBESAR</div>
+            <div class="value-md rose" id="topDropStoreName">-</div>
+          </div>
+        </div>
+        <div class="row space-between" style="margin-top:10px;">
+          <div class="bold-sm" id="topDropSales">Total Penurunan Sales: Rp 0</div>
+          <div class="bold-sm" id="topDropQty">Drop Qty: 0</div>
+        </div>
+        <hr class="divider rose-divider">
+        <div class="bold-sm" style="margin-bottom:6px;">Bauran Item Penurunan Paling Banyak:</div>
+        <div id="topDropItems"></div>
+      </div>
+
+      <div class="block">
+        <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.5 19l-5-5Zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"/></svg>
+          <input type="text" id="salesSearch" placeholder="Cari Item / PLU / Toko...">
+        </div>
+        <div class="row space-between" style="margin-top:8px;">
+          <h3 class="section-title" id="salesListHeader">Daftar Perbandingan Item (0)</h3>
+          <span class="drop-count" id="dropCountLabel">Turun: 0 Item</span>
+        </div>
+      </div>
+
+      <div id="salesList" class="card-list"></div>
+      <div class="bottom-spacer"></div>
+    </section>
+
+    <!-- ---------- TAB 1: PERSONNEL KPI ---------- -->
+    <section class="tab-panel" id="panel-1">
+
+      <div class="card navy-card">
+        <div class="row space-between center">
+          <div>
+            <div class="card-label teal">MONITORING KPI PERSONIL</div>
+            <div class="value-md white">Area AC: HASAN BASRI</div>
+          </div>
+          <span class="pill pill-teal-ghost"><span class="storeCountLabel">18</span> Toko Area</span>
+        </div>
+        <hr class="divider white-divider">
+        <div class="row space-between" id="productivityPills"></div>
+      </div>
+
+      <div class="block">
+        <h3 class="section-title">Pilih Toko Area Hasan Basri</h3>
+        <div class="chip-row" id="storeFilterRowKpi"></div>
+      </div>
+
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.5 19l-5-5Zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"/></svg>
+        <input type="text" id="kpiSearch" placeholder="Cari Personil / NIK / Toko...">
+      </div>
+
+      <div id="personnelList" class="card-list"></div>
+      <div class="bottom-spacer"></div>
+    </section>
+
+    <!-- ---------- TAB 2: IKT ---------- -->
+    <section class="tab-panel" id="panel-2">
+
+      <div class="card summary-card">
+        <div class="card-label">CAPAIAN IKT AREA HASAN (<span class="storeCountLabel">18</span> TOKO)</div>
+        <div class="row space-between top" style="margin-top:12px;">
+          <div>
+            <div class="micro-label">Target Net Sales</div>
+            <div class="value-lg" id="iktTotalTarget">Rp 0</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="micro-label">Actual Net Sales</div>
+            <div class="value-lg" id="iktTotalActual">Rp 0</div>
+          </div>
+        </div>
+        <div class="progress-track" style="margin-top:12px;">
+          <div class="progress-fill" id="iktProgressFill"></div>
+        </div>
+        <div class="row space-between" style="margin-top:8px;">
+          <span class="bold-sm" id="iktAchievementLabel">Achievement: 0.0%</span>
+          <span class="bold-sm rose" id="iktDeficitLabel">Kekurangan: Rp 0</span>
+        </div>
+      </div>
+
+      <div class="card navy-card">
+        <div class="row space-between center">
+          <div class="row center">
+            <svg class="calendar-icon" viewBox="0 0 24 24"><path fill="#0EA5E9" d="M7 11h5v5H7v-5Zm12-5v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1V2h2v2h6V2h2v2h1a2 2 0 0 1 2 2ZM5 8v12h14V8H5Z"/></svg>
+            <span class="card-label teal" style="margin-left:8px;">KEJAR TARGET HARIAN (RUN RATE)</span>
+          </div>
+          <span class="pill pill-teal-ghost" id="remainingDaysPill">Sisa: 15 Hari</span>
+        </div>
+        <p class="hint-white">Geser untuk hitung target harian yang harus dikejar per toko:</p>
+        <input type="range" id="remainingDaysSlider" min="1" max="31" value="15" step="1" class="slider">
+        <div class="run-rate-box">
+          <span class="white-text">Target Total Area Dikejar / Hari:</span>
+          <span class="run-rate-value" id="iktDailyCatchUp">Rp 0</span>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 5L20.5 19l-5-5Zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"/></svg>
+          <input type="text" id="iktSearch" placeholder="Cari Ranking Toko IKT...">
+        </div>
+        <h3 class="section-title" style="margin-top:8px;">Pilih Toko Area Hasan (<span class="storeCountLabel">18</span> Toko)</h3>
+        <div class="chip-row" id="storeFilterRowIkt"></div>
+      </div>
+
+      <div id="iktList" class="card-list"></div>
+      <div class="bottom-spacer"></div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ===== DIALOG: SHEET CONFIG ===== -->
+<div class="dialog-overlay" id="dlgSheetOverlay" hidden>
+  <div class="dialog" role="dialog" aria-modal="true">
+    <h2 class="dialog-title">Konfigurasi Google Sheets Real-Time</h2>
+    <p class="dialog-text">Link Google Sheets terinjeksi otomatis. Anda dapat mengubah atau menyinkronkan data terbaru kapan saja:</p>
+    <label class="field-label">Link Google Sheets Sales &amp; Stok</label>
+    <input type="text" id="inputSalesUrl" class="text-field">
+    <label class="field-label">Link Google Sheets KPI Personil</label>
+    <input type="text" id="inputKpiUrl" class="text-field">
+    <label class="field-label">Link Google Sheets IKT 2026</label>
+    <input type="text" id="inputIktUrl" class="text-field">
+
+    <hr class="divider">
+    <label class="field-label">Link Web App Apps Script (opsional — untuk sinkron semua data tanpa kendala CORS)</label>
+    <input type="text" id="inputAppsScriptUrl" class="text-field" placeholder="https://script.google.com/macros/s/xxxxx/exec">
+    <p class="dialog-text" style="margin-top:6px;">Kosongkan kolom ini jika ingin memakai mode sinkron langsung (hanya data Sales, perlu sheet di-share publik).</p>
+
+    <div class="dialog-actions">
+      <button class="btn-text" id="btnResetData">Reset Standar</button>
+      <button class="btn-primary" id="btnSaveSync">Simpan &amp; Sync Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DIALOG: ADD STORE (dihapus) ===== -->
+
+<script src="script.js"></script>
+</body>
+</html>
